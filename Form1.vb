@@ -4,8 +4,9 @@ Imports Microsoft.Office.Interop.Excel
 
 Public Class Form1
   ' Create a Jobs with dataset flowchart with the PUML syntax.
-  Dim ProgramVersion As String = "v0.0"
+  Dim ProgramVersion As String = "v0.1"
   'Change-history.
+  ' 2025-04-10 v0.1 hk Added Readme
   ' 2025-03-18 v0.0 hk New code
 
   ' load the Excel References
