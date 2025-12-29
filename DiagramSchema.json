@@ -1,0 +1,119 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Jobs with Datasets Flowchart Schema",
+  "description": "JSON schema for exporting job and dataset diagram information from the flowchart generator application",
+  "type": "object",
+  "required": ["metadata", "jobs"],
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "description": "Project metadata and generation settings",
+      "required": ["projectName", "generatedDate", "excelFilePath", "selectedDatasetTypes"],
+      "properties": {
+        "projectName": {
+          "type": "string",
+          "description": "Name of the project/diagram"
+        },
+        "generatedDate": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 datetime when diagram was generated"
+        },
+        "excelFilePath": {
+          "type": "string",
+          "description": "Full path to the Excel model file"
+        },
+        "selectedDatasetTypes": {
+          "type": "array",
+          "description": "List of dataset types included in this diagram",
+          "items": {
+            "type": "string",
+            "enum": ["Library", "PDS", "GDG", "File", "SQL"]
+          }
+        },
+        "applicationVersion": {
+          "type": "string",
+          "description": "Version of the application that generated this file"
+        }
+      }
+    },
+    "jobs": {
+      "type": "array",
+      "description": "List of jobs and their associated datasets",
+      "items": {
+        "type": "object",
+        "required": ["name", "datasets"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Name of the job"
+          },
+          "datasets": {
+            "type": "array",
+            "description": "List of datasets used by this job",
+            "items": {
+              "type": "object",
+              "required": ["name", "type", "relationship", "excelReference", "visualProperties"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Dataset name (e.g., DATASET.NAME, TABLE.NAME)"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": ["PDS", "GDG", "File", "Library", "SQL"],
+                  "description": "Type of dataset"
+                },
+                "relationship": {
+                  "type": "string",
+                  "enum": ["INPUT", "OUTPUT", "BOTH"],
+                  "description": "How the job uses this dataset"
+                },
+                "excelReference": {
+                  "type": "object",
+                  "description": "Reference to the Excel cell containing this dataset information",
+                  "required": ["worksheet", "row", "column", "cellReference"],
+                  "properties": {
+                    "worksheet": {
+                      "type": "string",
+                      "description": "Excel worksheet name (e.g., 'Files' or 'Records')"
+                    },
+                    "row": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "description": "Excel row number (1-based)"
+                    },
+                    "column": {
+                      "type": "string",
+                      "description": "Excel column letter (e.g., 'J')"
+                    },
+                    "cellReference": {
+                      "type": "string",
+                      "description": "Full Excel cell reference (e.g., 'J308')"
+                    }
+                  }
+                },
+                "visualProperties": {
+                  "type": "object",
+                  "description": "Visual styling properties for rendering",
+                  "required": ["color", "objectType"],
+                  "properties": {
+                    "color": {
+                      "type": "string",
+                      "description": "HTML color code (e.g., '#LightGreen')"
+                    },
+                    "objectType": {
+                      "type": "string",
+                      "enum": ["file", "collections", "folder", "database"],
+                      "description": "PlantUML object type used for rendering"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

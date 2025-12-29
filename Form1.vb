@@ -1,11 +1,14 @@
 ﻿Imports System.IO
 Imports Microsoft.Office.Interop
 Imports Microsoft.Office.Interop.Excel
+Imports Newtonsoft.Json
 
 Public Class Form1
   ' Create a Jobs with dataset flowchart with the PUML syntax.
-  Dim ProgramVersion As String = "v0.1"
+  Dim ProgramVersion As String = "v0.3"
   'Change-history.
+  ' 2025-12-17 v0.3 hk Simplified PUML generation; removed batch/VBScript. Added JSON export for viewer app.
+  ' 2025-06-12 v0.2 hk Add Links to Excel cells for dataset names. VBScript method
   ' 2025-04-10 v0.1 hk Added Readme
   ' 2025-03-18 v0.0 hk New code
 
@@ -193,6 +196,10 @@ Public Class Form1
         Continue For
       End If
       datasetName = datasetName.Trim.Replace("..", ".")
+
+      ' Replace leading symbols with literal text such a '&&' or '&'
+      datasetName = ReplaceLeadingSymbols(datasetName)
+
       If datasetName.StartsWith("SYSOUT=") Then
         Continue For
       End If
@@ -231,7 +238,8 @@ Public Class Form1
 
       Dim datasetInfo As String = datasetName & Delimiter &
                                   StartDispField & Delimiter &
-                                  datasetType
+                                  datasetType & Delimiter &
+                                  Row.ToString
       ' add the dataset to the list
       If Not listOfDatasets.Contains(datasetInfo) Then
         listOfDatasets.Add(datasetInfo)
@@ -260,10 +268,11 @@ Public Class Form1
       If JobsUsingDatabase.ContainsKey(theJob) Then
         Dim myValue As String = JobsUsingDatabase.Item(theJob)
         Dim myValues() As String = myValue.Split(Delimiter)
-        For currentDataset As Integer = 0 To myValues.Count - 1 Step 3
+        For currentDataset As Integer = 0 To myValues.Count - 1 Step 4
           Dim programName As String = myValues(currentDataset)
           Dim tableName As String = myValues(currentDataset + 1)
           Dim openType As String = myValues(currentDataset + 2)
+          Dim row As String = myValues(currentDataset + 3)
           Dim openTypes() As String = openType.Split(" "c)
           ' process each type of open type (i.e. SELECT, INSERT, UPDATE, DELETE)
           For Each type As String In openTypes
@@ -276,7 +285,10 @@ Public Class Form1
               StartDispField = "OUTPUT"
             End If
             ' check if the dataset name already exists in the list
-            Dim mydatasetInfo As String = tableName & Delimiter & StartDispField & Delimiter & "SQL"
+            Dim mydatasetInfo As String = tableName & Delimiter &
+              StartDispField & Delimiter &
+              "SQL" & Delimiter &
+              row
             If Not listofdatasets.Contains(mydatasetInfo) Then
               listofdatasets.Add(mydatasetInfo)
             End If
@@ -485,15 +497,18 @@ Public Class Form1
 
     Dim JobsAndUniqueDatasets As List(Of String) = LoadListOfJobsWithDatasets()
 
+    ' Get the Excel file path
+    Dim excelPath As String = txtSandboxFolder.Text & txtOutputFolder.Text & "\" & txtModelFilename.Text
+
     ' define the project file name
     Dim ProjectFileName As String = txtSandboxFolder.Text &
-                                    txtPumlFolder.Text &
-                                    "\" & txtProjectFilename.Text &
-                                    ".puml"
+                                  txtPumlFolder.Text &
+                                  "\" & txtProjectFilename.Text &
+                                  ".puml"
 
     ' open the PUML project file text file
     Dim swPuml As StreamWriter = New StreamWriter(ProjectFileName, False)
-    swPuml.WriteLine("@startuml " & txtProjectFilename.Text & ".puml")
+    swPuml.WriteLine("@startuml " & txtProjectFilename.Text)
     swPuml.WriteLine("skinparam shadowing false")
     swPuml.WriteLine("header " & Me.Text & "(c), by IBM")
     swPuml.WriteLine("footer " & DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"))
@@ -528,21 +543,14 @@ Public Class Form1
     swPuml.WriteLine("@enduml")
     swPuml.Close()
 
+    ' Export JSON data for diagram viewer
+    ExportDiagramDataToJson(JobsAndUniqueDatasets, excelPath)
+
   End Sub
   Sub createflowchart(ByRef jobName As String,
-                      ByRef swPuml As StreamWriter,
-                      ByRef JobsAndUniqueDatasets As List(Of String))
+                  ByRef swPuml As StreamWriter,
+                  ByRef JobsAndUniqueDatasets As List(Of String))
     ' this routine will create the flowchart puml details for a job selected
-
-    ' puml syntax colors and lines
-    '  #line:red;line.dotted;text:red when the dataset/object is an input and output
-    ' dsn -[#blue]down-> job... when the dataset/object is an input
-    ' job -[#green]down-> dsn... when the dataset/object is an output
-    ' left to right direction
-    ' job <-[#red]> app... when the dataset/object is an input and output (left side of object)
-    ' job <-[#red]left-> app... when the dataset/object is an input and output (right side of object)
-    ' top to bottom direction (back to default)
-
 
     ' all the datasets for the job
     Dim theJobName As String
@@ -550,9 +558,11 @@ Public Class Form1
     Dim datasetName As String
     Dim StartDispField As String
     Dim datasetType As String
+    Dim rowNumber As String
 
     ' build the objects for the job (jobname and files)
     swPuml.WriteLine("rectangle " & jobName)
+
     For Each datasetInfo In JobsAndUniqueDatasets
       theJobName = datasetInfo.Split(Delimiter)(0)
       If theJobName <> jobName Then
@@ -562,23 +572,46 @@ Public Class Form1
       datasetName = datasetInfo.Split(Delimiter)(2)
       StartDispField = datasetInfo.Split(Delimiter)(3)
       datasetType = datasetInfo.Split(Delimiter)(4)
-      Dim color As String = ""
+      rowNumber = datasetInfo.Split(Delimiter)(5)
+
+      ' Determine worksheet name based on dataset type
+      Dim worksheetName As String = "Files"
+      If datasetType = "SQL" Then
+        worksheetName = "Records"
+      End If
+
+      ' Convert row number to cell reference
+      Dim cellColumn As String = "J"
+      Dim cellReference As String = cellColumn & rowNumber
+
+      Dim color As String = "#LightGray"
       Dim objType As String = "file"
-      Select Case datasetType
+      Select Case datasetType.ToUpper
+        Case "FILE"
+          objType = "queue"
+          color = ""
         Case "PDS"
-          objType = "collections"
-          color = "#LightGreen"
+          objType = "package"
+          color = "#LightCyan"
         Case "GDG"
           objType = "collections"
           color = "#LightGreen"
-        Case "Library"
+        Case "LIBRARY"
           objType = "folder"
           color = "#LightBlue"
         Case "SQL"
           objType = "database"
           color = "#LightYellow"
       End Select
-      swPuml.WriteLine(objType & " " & Chr(34) & datasetName & Chr(34) & " " & Color)
+
+      ' Sanitize the dataset name for use as PlantUML identifier
+      Dim sanitizedName As String = SanitizeForPlantUML(datasetName)
+
+      ' Create multi-line label with dataset name and Excel reference
+      ' PlantUML syntax: object "Line1\nLine2" as Identifier color
+      Dim displayLabel As String = datasetName & "\n(" & worksheetName & ":" & cellReference & ")"
+
+      swPuml.WriteLine(objType & " " & Chr(34) & displayLabel & Chr(34) & " as " & sanitizedName & " " & color)
     Next
     swPuml.WriteLine("")
 
@@ -590,10 +623,11 @@ Public Class Form1
       End If
       seqNumber = datasetInfo.Split(Delimiter)(1)
       datasetName = datasetInfo.Split(Delimiter)(2)
+      Dim sanitizedName As String = SanitizeForPlantUML(datasetName)
       StartDispField = datasetInfo.Split(Delimiter)(3)
       datasetType = datasetInfo.Split(Delimiter)(4)
       If StartDispField = "INPUT" Then
-        swPuml.WriteLine(Chr(34) & datasetName & Chr(34) & " -[#blue]-> " & jobName)
+        swPuml.WriteLine(sanitizedName & " -[#blue]-> " & jobName)
       End If
     Next
     swPuml.WriteLine("")
@@ -606,13 +640,13 @@ Public Class Form1
       End If
       seqNumber = datasetInfo.Split(Delimiter)(1)
       datasetName = datasetInfo.Split(Delimiter)(2)
+      Dim sanitizedName As String = SanitizeForPlantUML(datasetName)
       StartDispField = datasetInfo.Split(Delimiter)(3)
       datasetType = datasetInfo.Split(Delimiter)(4)
       If StartDispField = "BOTH" Then
-        swPuml.WriteLine(jobName & " <-[#red]> " & Chr(34) & datasetName & Chr(34))
+        swPuml.WriteLine(jobName & " <-[#red]> " & sanitizedName)
       End If
     Next
-
 
     ' map all the outputs to the job
     For Each datasetInfo In JobsAndUniqueDatasets
@@ -622,23 +656,55 @@ Public Class Form1
       End If
       seqNumber = datasetInfo.Split(Delimiter)(1)
       datasetName = datasetInfo.Split(Delimiter)(2)
+      Dim sanitizedName As String = SanitizeForPlantUML(datasetName)
       StartDispField = datasetInfo.Split(Delimiter)(3)
       datasetType = datasetInfo.Split(Delimiter)(4)
       If StartDispField = "OUTPUT" Then
-        swPuml.WriteLine(jobName & " -[#green]-> " & Chr(34) & datasetName & Chr(34))
+        swPuml.WriteLine(jobName & " -[#green]-> " & sanitizedName)
       End If
     Next
     swPuml.WriteLine("")
 
-
   End Sub
+
+  Function SanitizeForPlantUML(ByRef datasetName As String) As String
+    ' Sanitize dataset names to make them valid PlantUML identifiers
+    ' Replace problematic characters with underscores or remove them
+
+    If String.IsNullOrEmpty(datasetName) Then
+      Return datasetName
+    End If
+
+    Dim sanitized As String = datasetName
+
+    ' Replace invalid characters with underscores
+    Dim invalidChars As String() = {"(", ")", "[", "]", "{", "}", "<", ">", ":", ",", ";", "'", "\", "/", "*", "+", "-", "#", "~", "!", "@", "$", "%", "&"}
+
+    For Each invalidChar In invalidChars
+      sanitized = sanitized.Replace(invalidChar, "_")
+    Next
+
+    ' Handle spaces - replace with underscores
+    sanitized = sanitized.Replace(" ", "_")
+
+    ' Remove any leading or trailing underscores
+    sanitized = sanitized.Trim("_"c)
+
+    ' Ensure the name doesn't start with a number (PlantUML requirement)
+    If sanitized.Length > 0 AndAlso Char.IsDigit(sanitized(0)) Then
+      sanitized = "DSN_" & sanitized
+    End If
+
+    Return sanitized
+  End Function
+
+
   Function LoadListOfJobsWithDatasets() As List(Of String)
     ' this function will analyze the dictofJobStepWithDatasets and return a dictionary of datasets
     ' by job / dataset. Using the start disp field to determine
     ' if the datasets are input or output or both to each job.
 
-
-    Dim dictOfJobsWithDatasets As New Dictionary(Of String, String) ' key=jobname|sequence, value=datasetname|startdisp
+    Dim dictOfJobsWithDatasets As New Dictionary(Of String, String)
 
     ' need to create a list of dataset names for each job and then sort by jobname and dataset name
     Dim listOfJobsAndDatasets As New List(Of String)
@@ -654,59 +720,73 @@ Public Class Form1
       Dim listOfDatasets As New List(Of String)
       listOfDatasets = dictJobStepsWithDatasets.Item(JobKey)
       For Each datasetInfo As String In listOfDatasets
-        Dim myDatasetName As String = datasetInfo.Split(Delimiter)(0)
-        Dim myStartDispField As String = datasetInfo.Split(Delimiter)(1)
-        Dim myDatasetType As String = datasetInfo.Split(Delimiter)(2)
+        Dim myDatasetInfo As String() = datasetInfo.Split(Delimiter)
+        Dim myDatasetName As String = myDatasetInfo(0)
+        Dim myStartDispField As String = myDatasetInfo(1)
+        Dim myDatasetType As String = myDatasetInfo(2)
+        Dim myRowNumber As String = myDatasetInfo(3)
         listOfJobsAndDatasets.Add(myJobName & Delimiter & myJobSequence & Delimiter &
                                   myDatasetName & Delimiter &
                                   myStartDispField & Delimiter &
-                                  myDatasetType)
+                                  myDatasetType & Delimiter &
+                                  myRowNumber)
       Next
     Next
     listOfJobsAndDatasets.Sort()
 
     ' now I need analyze the startdisp fields; if INPUT and OUTPUT then make it BOTH
+    ' Also remove true duplicates (same job, dataset, and disposition)
 
-    ' count the number of unique datasets for a jobname
-    Dim dictOfDatasets As New Dictionary(Of String, Integer)
     Dim listOfJobsAndUniqueDatasets As New List(Of String)
-    Dim jobName(1) As String
-    Dim jobSequence(1) As String
-    Dim datasetName(1) As String
-    Dim startdisp(1) As String
-    Dim datasetType(1) As String
-    For item As Integer = 0 To listOfJobsAndDatasets.Count - 1 ' process in pairs...
-      If item = listOfJobsAndDatasets.Count - 1 Then
-        Exit For
-      End If
-      ' current index
-      jobName(0) = listOfJobsAndDatasets(item).Split(Delimiter)(0)
-      jobSequence(0) = listOfJobsAndDatasets(item).Split(Delimiter)(1)
-      datasetName(0) = listOfJobsAndDatasets(item).Split(Delimiter)(2)
-      startdisp(0) = listOfJobsAndDatasets(item).Split(Delimiter)(3)
-      datasetType(0) = listOfJobsAndDatasets(item).Split(Delimiter)(4)
-      ' next index
-      jobName(1) = listOfJobsAndDatasets(item + 1).Split(Delimiter)(0)
-      jobSequence(1) = listOfJobsAndDatasets(item + 1).Split(Delimiter)(1)
-      datasetName(1) = listOfJobsAndDatasets(item + 1).Split(Delimiter)(2)
-      startdisp(1) = listOfJobsAndDatasets(item + 1).Split(Delimiter)(3)
-      datasetType(1) = listOfJobsAndDatasets(item + 1).Split(Delimiter)(4)
+    Dim processedDatasets As New HashSet(Of String)
 
-      If jobName(0) = jobName(1) And datasetName(0) = datasetName(1) Then
-        If startdisp(0) <> startdisp(1) Then
-          startdisp(0) = "BOTH"
+    Dim i As Integer = 0
+    While i < listOfJobsAndDatasets.Count
+      ' current index
+      Dim currentJobName As String = listOfJobsAndDatasets(i).Split(Delimiter)(0)
+      Dim currentJobSequence As String = listOfJobsAndDatasets(i).Split(Delimiter)(1)
+      Dim currentDatasetName As String = listOfJobsAndDatasets(i).Split(Delimiter)(2)
+      Dim currentStartDisp As String = listOfJobsAndDatasets(i).Split(Delimiter)(3)
+      Dim currentDatasetType As String = listOfJobsAndDatasets(i).Split(Delimiter)(4)
+      Dim currentRowNumber As String = listOfJobsAndDatasets(i).Split(Delimiter)(5)
+
+      ' Create unique key for duplicate detection (job + dataset name)
+      Dim uniqueKey As String = currentJobName & "|" & currentDatasetName
+
+      ' Check if we have a next item to compare
+      If i < listOfJobsAndDatasets.Count - 1 Then
+        Dim nextJobName As String = listOfJobsAndDatasets(i + 1).Split(Delimiter)(0)
+        Dim nextDatasetName As String = listOfJobsAndDatasets(i + 1).Split(Delimiter)(2)
+        Dim nextStartDisp As String = listOfJobsAndDatasets(i + 1).Split(Delimiter)(3)
+
+        ' Check if next item is same job and dataset
+        If currentJobName = nextJobName AndAlso currentDatasetName = nextDatasetName Then
+          ' If dispositions are different, merge to BOTH
+          If currentStartDisp <> nextStartDisp Then
+            currentStartDisp = "BOTH"
+          End If
+          ' Skip the next item since we've processed it
+          i += 1
         End If
-        item += 1
       End If
-      listOfJobsAndUniqueDatasets.Add(jobName(0) & Delimiter &
-                                      jobSequence(0) & Delimiter &
-                                      datasetName(0) & Delimiter &
-                                      startdisp(0) & Delimiter &
-                                      datasetType(0))
-    Next
+
+      ' Add to results if not already processed
+      If Not processedDatasets.Contains(uniqueKey) Then
+        processedDatasets.Add(uniqueKey)
+        listOfJobsAndUniqueDatasets.Add(currentJobName & Delimiter &
+                                          currentJobSequence & Delimiter &
+                                          currentDatasetName & Delimiter &
+                                          currentStartDisp & Delimiter &
+                                          currentDatasetType & Delimiter &
+                                          currentRowNumber)
+      End If
+
+      i += 1
+    End While
 
     Return listOfJobsAndUniqueDatasets
   End Function
+
   Function LoadJobsUsingDatabase() As Dictionary(Of String, String)
 
     lblStatus.Text = "Loading Jobs that uses Databases"
@@ -716,14 +796,6 @@ Public Class Form1
 
     theWorksheet = workbook.Sheets.Item("Records")
     theWorksheet.Activate()
-
-    ' Apply filter to the Type column (E) for a specific value of SQL
-    'theWorksheet.Range("E1").AutoFilter(Field:=5, Criteria1:="SQL")
-    'Dim usedRange As Microsoft.Office.Interop.Excel.Range = theWorksheet.UsedRange
-
-    ' Apply advanced filter to column B to get unique values
-    'Dim uniqueRange As Microsoft.Office.Interop.Excel.Range = theWorksheet.Range("B1", "B" & usedRange.Rows.Count)
-    'uniqueRange.AdvancedFilter(Action:=Microsoft.Office.Interop.Excel.XlFilterAction.xlFilterInPlace, Unique:=True)
 
     Dim MaxRows As Long = theWorksheet.UsedRange.Rows(theWorksheet.UsedRange.Rows.Count).row
     Dim MaxCols As Long = theWorksheet.UsedRange.Columns.Count
@@ -748,7 +820,10 @@ Public Class Form1
       If theOpen.Trim.Length = 0 Then
         theOpen = "SELECT"
       End If
-      Dim theValue As String = theProgram & Delimiter & theTable & Delimiter & theOpen
+      Dim theValue As String = theProgram & Delimiter &
+        theTable & Delimiter &
+        theOpen & Delimiter &
+        Row.ToString
       ' Check if the key already exists in the dictionary
       If Not myJobsUsingDatabase.ContainsKey(theJobName) Then
         myJobsUsingDatabase.Add(theJobName, theValue)
@@ -756,32 +831,187 @@ Public Class Form1
         ' If the key exists, append the new value to the existing value
         myJobsUsingDatabase(theJobName) &= Delimiter & theValue
       End If
-
     Next
-
-    'For Each row As Microsoft.Office.Interop.Excel.Range In usedRange.Rows
-    '  If row.EntireRow.Hidden = False Then
-    '    ' Read the value from the first column (A)
-    '    Dim theKey As String = row.Cells(1, 1).Value2.ToString()
-    '    If theKey = "Source" Then
-    '      Continue For
-    '    End If
-    '    Dim theProgram As String =
-    '      row.Cells(1, 2).Value2.ToString()
-    '    Dim theTable As String = row.Cells(1, 3).Value2.ToString()
-    '    Dim theOpen As String = If(row.Cells(1, 11).Value2, "SELECT")
-    '    Dim theValue As String = theProgram & Delimiter & theTable & Delimiter & theOpen
-    '    'Dim theValue As String = theTable & Delimiter & theOpen
-    '    ' Check if the key already exists in the dictionary
-    '    If Not myJobsUsingDatabase.ContainsKey(theKey) Then
-    '      myJobsUsingDatabase.Add(theKey, theValue)
-    '    End If
-    '  End If
-    'Next
-
-    ' Remove the filters
-    'theWorksheet.AutoFilterMode = False
 
     Return myJobsUsingDatabase
   End Function
+
+  Function ReplaceLeadingSymbols(ByRef datasetName As String) As String
+    ' Replace leading symbols in dataset names with their literal equivalents
+    ' Note: Check for && first before & to avoid incorrect partial replacements
+
+    If String.IsNullOrEmpty(datasetName) Then
+      Return datasetName
+    End If
+
+    ' Check for temporary datasets (&&) first
+    If datasetName.StartsWith("&&") Then
+      Return "TEMPORARY." & datasetName.Substring(2)
+    End If
+
+    ' Check for symbolic datasets (&)
+    If datasetName.StartsWith("&") Then
+      Return "SYMBOLIC." & datasetName.Substring(1)
+    End If
+
+    ' No leading symbol found, return original
+    Return datasetName
+  End Function
+
+  ' JSON Data Classes for Serialization
+  Public Class DiagramMetadata
+    Public Property projectName As String
+    Public Property generatedDate As String
+    Public Property excelFilePath As String
+    Public Property selectedDatasetTypes As List(Of String)
+    Public Property applicationVersion As String
+  End Class
+
+  Public Class ExcelReference
+    Public Property worksheet As String
+    Public Property row As Integer
+    Public Property column As String
+    Public Property cellReference As String
+  End Class
+
+  Public Class VisualProperties
+    Public Property color As String
+    Public Property objectType As String
+  End Class
+
+  Public Class DatasetInfo
+    Public Property name As String
+    Public Property type As String
+    Public Property relationship As String
+    Public Property excelReference As ExcelReference
+    Public Property visualProperties As VisualProperties
+  End Class
+
+  Public Class JobInfo
+    Public Property name As String
+    Public Property datasets As List(Of DatasetInfo)
+  End Class
+
+  Public Class DiagramData
+    Public Property metadata As DiagramMetadata
+    Public Property jobs As List(Of JobInfo)
+  End Class
+
+  Sub ExportDiagramDataToJson(ByRef JobsAndUniqueDatasets As List(Of String), ByRef excelPath As String)
+    ' Export diagram data to JSON format for the interactive viewer application
+    Try
+      lblStatus.Text = "Exporting JSON data..."
+
+      ' Create the diagram data object
+      Dim diagramData As New DiagramData()
+
+      ' Populate metadata
+      diagramData.metadata = New DiagramMetadata()
+      diagramData.metadata.projectName = txtProjectFilename.Text
+      diagramData.metadata.generatedDate = DateTime.Now.ToString("o")  ' ISO 8601 format
+      diagramData.metadata.excelFilePath = excelPath
+      diagramData.metadata.applicationVersion = ProgramVersion
+
+      ' Build selected dataset types list
+      diagramData.metadata.selectedDatasetTypes = New List(Of String)
+      If cbLibrary.Checked Then diagramData.metadata.selectedDatasetTypes.Add("Library")
+      If cbPDS.Checked Then diagramData.metadata.selectedDatasetTypes.Add("PDS")
+      If cbGDG.Checked Then diagramData.metadata.selectedDatasetTypes.Add("GDG")
+      If cbFile.Checked Then diagramData.metadata.selectedDatasetTypes.Add("File")
+      If cbSQL.Checked Then diagramData.metadata.selectedDatasetTypes.Add("SQL")
+
+      ' Populate jobs
+      diagramData.jobs = New List(Of JobInfo)
+
+      ' Process each selected job
+      For Each jobName As String In lbSelectedJobs.Items
+        Dim jobInfo As New JobInfo()
+        jobInfo.name = jobName
+        jobInfo.datasets = New List(Of DatasetInfo)
+
+        ' Process each dataset for this job
+        For Each datasetInfo As String In JobsAndUniqueDatasets
+          Dim parts() As String = datasetInfo.Split(Delimiter)
+          Dim theJobName As String = parts(0)
+
+          If theJobName <> jobName Then
+            Continue For
+          End If
+
+          Dim datasetName As String = parts(2)
+          Dim startDispField As String = parts(3)
+          Dim datasetType As String = parts(4)
+          Dim rowNumber As String = parts(5)
+
+          ' Create dataset info object
+          Dim dataset As New DatasetInfo()
+          dataset.name = datasetName
+          dataset.type = datasetType
+          dataset.relationship = startDispField
+
+          ' Excel reference
+          dataset.excelReference = New ExcelReference()
+          dataset.excelReference.row = Integer.Parse(rowNumber)
+
+          ' Determine worksheet and column based on dataset type
+          If datasetType = "SQL" Then
+            dataset.excelReference.worksheet = "Records"
+            dataset.excelReference.column = "C"  ' SQL datasets are in column C (File/Records)
+            dataset.excelReference.cellReference = "C" & rowNumber
+          Else
+            dataset.excelReference.worksheet = "Files"
+            dataset.excelReference.column = "J"  ' File datasets are in column J (DatasetName)
+            dataset.excelReference.cellReference = "J" & rowNumber
+          End If
+
+          ' Visual properties
+          dataset.visualProperties = New VisualProperties()
+          Select Case datasetType
+            Case "PDS"
+              dataset.visualProperties.color = "#LightGreen"
+              dataset.visualProperties.objectType = "collections"
+            Case "GDG"
+              dataset.visualProperties.color = "#LightGreen"
+              dataset.visualProperties.objectType = "collections"
+            Case "Library"
+              dataset.visualProperties.color = "#LightBlue"
+              dataset.visualProperties.objectType = "folder"
+            Case "SQL"
+              dataset.visualProperties.color = "#LightYellow"
+              dataset.visualProperties.objectType = "database"
+            Case Else
+              dataset.visualProperties.color = "#White"
+              dataset.visualProperties.objectType = "file"
+          End Select
+
+          jobInfo.datasets.Add(dataset)
+        Next
+
+        ' Only add jobs that have datasets
+        If jobInfo.datasets.Count > 0 Then
+          diagramData.jobs.Add(jobInfo)
+        End If
+      Next
+
+      ' Serialize to JSON with formatting
+      Dim jsonSettings As New JsonSerializerSettings()
+      jsonSettings.Formatting = Formatting.Indented
+      jsonSettings.NullValueHandling = NullValueHandling.Ignore
+
+      Dim jsonString As String = JsonConvert.SerializeObject(diagramData, jsonSettings)
+
+      ' Save JSON file (same name as PUML but with .json extension)
+      Dim jsonFileName As String = txtSandboxFolder.Text &
+                                   txtPumlFolder.Text &
+                                   "\" & txtProjectFilename.Text &
+                                   ".json"
+
+      File.WriteAllText(jsonFileName, jsonString)
+
+      lblStatus.Text = "JSON export complete: " & Path.GetFileName(jsonFileName)
+
+    Catch ex As Exception
+      MessageBox.Show("Error exporting JSON: " & ex.Message, "JSON Export Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Try
+  End Sub
 End Class
