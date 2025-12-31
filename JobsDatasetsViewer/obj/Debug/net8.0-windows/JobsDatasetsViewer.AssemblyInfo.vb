@@ -16,7 +16,7 @@ Imports System.Reflection
 <Assembly: System.Reflection.AssemblyCompanyAttribute("JobsDatasetsViewer"),  _
  Assembly: System.Reflection.AssemblyConfigurationAttribute("Debug"),  _
  Assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0"),  _
- Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0"),  _
+ Assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+38d1eaf5b4f718de8b63705a19cba28f55d3b275"),  _
  Assembly: System.Reflection.AssemblyProductAttribute("JobsDatasetsViewer"),  _
  Assembly: System.Reflection.AssemblyTitleAttribute("JobsDatasetsViewer"),  _
  Assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0"),  _
