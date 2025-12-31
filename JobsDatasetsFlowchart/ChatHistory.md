@@ -2,7 +2,7 @@
 
 ## Project: Jobs with Dataset Flowchart Generator
 **Version:** v0.3  
-**Repository:** https://github.com/hkearn777/JobsDatasetsFlowchart
+**Repository:** https://github.com/hkearn777/JobsDatasets
 
 ---
 
