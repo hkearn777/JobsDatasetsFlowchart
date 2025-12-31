@@ -1,0 +1,107 @@
+﻿<Window x:Class="MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Jobs &amp; Datasets Viewer" Height="600" Width="1100"
+        WindowStartupLocation="CenterScreen">
+
+    <!-- Main Grid: Divides window into rows -->
+    <Grid>
+        <!-- Define 3 rows: Top toolbar, Middle canvas, Bottom status -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="25"/>
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Top Toolbar -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10" Background="#F0F0F0">
+            <Button x:Name="btnOpenJson" Content="Open JSON File" 
+                    Width="120" Height="30" Margin="5"
+                    Click="btnOpenJson_Click"/>
+            <Button x:Name="btnExportImage" Content="Export Image" 
+                    Width="100" Height="30" Margin="5"
+                    Click="btnExportImage_Click"
+                    IsEnabled="False"/>
+            <TextBlock x:Name="txtStatus" Text="No file loaded" 
+                       VerticalAlignment="Center" Margin="10,0,0,0"/>
+
+            <!-- Separator -->
+            <Rectangle Width="1" Fill="Gray" Margin="10,5,10,5"/>
+
+            <!-- Zoom Controls -->
+            <Button x:Name="btnZoomIn" Content="Zoom In +" 
+                    Width="80" Height="30" Margin="5"
+                    Click="btnZoomIn_Click"/>
+            <Button x:Name="btnZoomOut" Content="Zoom Out -" 
+                    Width="80" Height="30" Margin="5"
+                    Click="btnZoomOut_Click"/>
+            <Button x:Name="btnResetView" Content="Reset" 
+                    Width="60" Height="30" Margin="5"
+                    Click="btnResetView_Click"/>
+            <TextBlock x:Name="txtZoomLevel" Text="100%" 
+                       VerticalAlignment="Center" Margin="10,0,0,0" 
+                       FontWeight="Bold" FontSize="14"/>
+
+            <!-- Separator -->
+            <Rectangle Width="1" Fill="Gray" Margin="10,5,10,5"/>
+
+            <!-- Search Controls -->
+            <TextBlock Text="Search:" VerticalAlignment="Center" Margin="5,0,5,0"/>
+            <TextBox x:Name="txtSearch" 
+                     Width="150" Height="26" 
+                     VerticalAlignment="Center"
+                     KeyDown="txtSearch_KeyDown"
+                     TextChanged="txtSearch_TextChanged"/>
+            <Button x:Name="btnSearch" Content="Find" 
+                    Width="50" Height="30" Margin="5"
+                    Click="btnSearch_Click"/>
+            <Button x:Name="btnPrevious" Content="◀" 
+                    Width="30" Height="30" Margin="2"
+                    Click="btnPrevious_Click"
+                    ToolTip="Previous match"/>
+            <Button x:Name="btnNext" Content="▶" 
+                    Width="30" Height="30" Margin="2"
+                    Click="btnNext_Click"
+                    ToolTip="Next match"/>
+            <Button x:Name="btnClearSearch" Content="✖" 
+                    Width="30" Height="30" Margin="2"
+                    Click="btnClearSearch_Click"
+                    ToolTip="Clear search"/>
+            <TextBlock x:Name="txtSearchResults" 
+                       Text="" 
+                       VerticalAlignment="Center" 
+                       Margin="10,0,0,0"
+                       FontSize="12"/>
+        </StackPanel>
+
+        <!-- Row 1: Main Canvas Area with Zoom/Pan Support -->
+        <Border Grid.Row="1" Background="White" BorderBrush="Gray" BorderThickness="1" Margin="10">
+            <ScrollViewer x:Name="scrollViewer" 
+                         HorizontalScrollBarVisibility="Auto" 
+                         VerticalScrollBarVisibility="Auto">
+                <Grid x:Name="canvasContainer"
+                      MouseWheel="CanvasContainer_MouseWheel"
+                      MouseLeftButtonDown="CanvasContainer_MouseLeftButtonDown"
+                      MouseLeftButtonUp="CanvasContainer_MouseLeftButtonUp"
+                      MouseMove="CanvasContainer_MouseMove"
+                      Background="Transparent">
+                    <Grid.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform x:Name="scaleTransform"/>
+                            <TranslateTransform x:Name="translateTransform"/>
+                        </TransformGroup>
+                    </Grid.RenderTransform>
+                    <Canvas x:Name="diagramCanvas" Background="WhiteSmoke" 
+                            Width="2000" Height="2000"/>
+                </Grid>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Row 2: Status Bar -->
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock x:Name="txtStatusBar" Text="Ready. Use Ctrl+MouseWheel to zoom, drag to pan."/>
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

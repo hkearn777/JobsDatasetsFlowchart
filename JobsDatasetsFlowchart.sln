@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151 d18.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "JobsDatasetsFlowchart", "JobsDatasetsFlowchart\JobsDatasetsFlowchart.vbproj", "{E3EE28FC-EB95-414F-9AA8-9FCFA649B9DB}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "JobsDatasetsViewer", "JobsDatasetsViewer\JobsDatasetsViewer.vbproj", "{3D6D48D6-F2CB-4890-B9D7-66E86E89F493}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E3EE28FC-EB95-414F-9AA8-9FCFA649B9DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3EE28FC-EB95-414F-9AA8-9FCFA649B9DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3EE28FC-EB95-414F-9AA8-9FCFA649B9DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3EE28FC-EB95-414F-9AA8-9FCFA649B9DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D6D48D6-F2CB-4890-B9D7-66E86E89F493}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D6D48D6-F2CB-4890-B9D7-66E86E89F493}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D6D48D6-F2CB-4890-B9D7-66E86E89F493}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D6D48D6-F2CB-4890-B9D7-66E86E89F493}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2F98CA7F-5DAC-477C-AED0-535A48CE9629}
+	EndGlobalSection
+EndGlobal

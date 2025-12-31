@@ -1,0 +1,920 @@
+{
+  "metadata": {
+    "projectName": "TestLinks",
+    "generatedDate": "2025-12-17T12:16:06.0745280-06:00",
+    "excelFilePath": "C:\\Users\\906074897\\Documents\\Sandbox\\ABCTest\\OUTPUT\\ADDILite.xlsx",
+    "selectedDatasetTypes": [
+      "GDG",
+      "File",
+      "SQL"
+    ],
+    "applicationVersion": "v0.3"
+  },
+  "jobs": [
+    {
+      "name": "PRC6850D",
+      "datasets": [
+        {
+          "name": "DPSP.DPSC110A.CUTOVER",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 209,
+            "column": "J",
+            "cellReference": "J209"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "DPSP.DPSF035A.GROUP.FORMAT.TBL",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 212,
+            "column": "J",
+            "cellReference": "J212"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "DPSP.DPSF040A.FORMAT.MODULE.TBL",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 213,
+            "column": "J",
+            "cellReference": "J213"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "DPSP.DPSF100C.ERROR.FILE.PRC6850D()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 230,
+            "column": "J",
+            "cellReference": "J230"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "DPSP.DPSF100C.ERROR.RPT.FILE()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 214,
+            "column": "J",
+            "cellReference": "J214"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "DPSP.DPSF110A.NONCAT.ERROR.FILE()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 215,
+            "column": "J",
+            "cellReference": "J215"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "DPSP.DPSF110A.NONCAT.PRC6850D()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 231,
+            "column": "J",
+            "cellReference": "J231"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "DPSP.DPSF110B.CAT.ERROR.FILE()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 216,
+            "column": "J",
+            "cellReference": "J216"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "DPSP.DPSF110B.CAT.ERROR.PRC6850D()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 232,
+            "column": "J",
+            "cellReference": "J232"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "DPSP.DPSS110A.BROAD.CAST.GROUPS",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 211,
+            "column": "J",
+            "cellReference": "J211"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "DPSP.DPSV030A.STORE.PGM.TBL.KSDS",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 217,
+            "column": "J",
+            "cellReference": "J217"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "LOWES.T024H_SLC_STS_ITM",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 18,
+            "column": "J",
+            "cellReference": "J18"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T063A_LCT",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 65,
+            "column": "J",
+            "cellReference": "J65"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T119_CP_RSA_CTL",
+          "type": "SQL",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 25,
+            "column": "J",
+            "cellReference": "J25"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T162_LCT_CGY",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 19,
+            "column": "J",
+            "cellReference": "J19"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T162A_LCT_CGY_LCT",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 20,
+            "column": "J",
+            "cellReference": "J20"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T165_LCT_CGY_GRP",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 78,
+            "column": "J",
+            "cellReference": "J78"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T221_LCT_CGY_CTL",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 64,
+            "column": "J",
+            "cellReference": "J64"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T283_ZON_MNT_TNS",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 63,
+            "column": "J",
+            "cellReference": "J63"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T331_CTG_ITM",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 21,
+            "column": "J",
+            "cellReference": "J21"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T332_CTG_ITM_CST",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 22,
+            "column": "J",
+            "cellReference": "J22"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T333_CTG_ITM_PRC",
+          "type": "SQL",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 23,
+            "column": "J",
+            "cellReference": "J23"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T335_CTG_ZON_FCT",
+          "type": "SQL",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 24,
+            "column": "J",
+            "cellReference": "J24"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T406_CRP_ITM_FCT",
+          "type": "SQL",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 62,
+            "column": "J",
+            "cellReference": "J62"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T407_PRC_ZON_FCT",
+          "type": "SQL",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 61,
+            "column": "J",
+            "cellReference": "J61"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T407_PRC_ZON_FCT",
+          "type": "SQL",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 17,
+            "column": "J",
+            "cellReference": "J17"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "LOWES.T407_PRC_ZON_FCT",
+          "type": "SQL",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Records",
+            "row": 76,
+            "column": "J",
+            "cellReference": "J76"
+          },
+          "visualProperties": {
+            "color": "#LightYellow",
+            "objectType": "database"
+          }
+        },
+        {
+          "name": "ODSP.MQS.SS010()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 229,
+            "column": "J",
+            "cellReference": "J229"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "PRCP.PRC6850D.NEWSTK.CTRPK.FCT",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 181,
+            "column": "J",
+            "cellReference": "J181"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRC6850D.STK.CTRPK.UNLD()",
+          "type": "GDG",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 169,
+            "column": "J",
+            "cellReference": "J169"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "PRCP.PRC6850D.STK.CTRPK.UNLD()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 163,
+            "column": "J",
+            "cellReference": "J163"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "PRCP.PRCF283A.ZONE.MNT.TRANS.PRCB686.SORTED",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 80,
+            "column": "J",
+            "cellReference": "J80"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685A.LCT.ITM.FCT.BKUP()",
+          "type": "GDG",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 190,
+            "column": "J",
+            "cellReference": "J190"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685A.LCT.ITM.FCT.SORTED",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 189,
+            "column": "J",
+            "cellReference": "J189"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685A.LCT.ITM.FCT.SORTED",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 182,
+            "column": "J",
+            "cellReference": "J182"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685A.LCT.ITM.FCT",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 178,
+            "column": "J",
+            "cellReference": "J178"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685A.LCT.ITM.FCT",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 4,
+            "column": "J",
+            "cellReference": "J4"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685B.EMAIL.FILE",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 35,
+            "column": "J",
+            "cellReference": "J35"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685B.PRCB686.LCT.ITM.FCT",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 179,
+            "column": "J",
+            "cellReference": "J179"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685C.EMAIL.FILE",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 41,
+            "column": "J",
+            "cellReference": "J41"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685D.RANLONG.EMAIL.FILE",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 45,
+            "column": "J",
+            "cellReference": "J45"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685D.RANLONG.EMAIL.FILE",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 27,
+            "column": "J",
+            "cellReference": "J27"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685E.T162A.SYSCTL",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 146,
+            "column": "J",
+            "cellReference": "J146"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685F.T407.SYSCTL",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 147,
+            "column": "J",
+            "cellReference": "J147"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685G.T085.SYSCTL",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 148,
+            "column": "J",
+            "cellReference": "J148"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685H.T162A.SYSREC",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 154,
+            "column": "J",
+            "cellReference": "J154"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685I.T407.SYSREC",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 155,
+            "column": "J",
+            "cellReference": "J155"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685J.T085.SYSREC",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 162,
+            "column": "J",
+            "cellReference": "J162"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF685K.T162A.T407",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 161,
+            "column": "J",
+            "cellReference": "J161"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF686A.NEW.ZONE.THRESHLD",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 117,
+            "column": "J",
+            "cellReference": "J117"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF686B.NEWZONES.NOT.PROC",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 93,
+            "column": "J",
+            "cellReference": "J93"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF686B.PRCB686A.LCT.ITM.FCT",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 180,
+            "column": "J",
+            "cellReference": "J180"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF686C.NEW.PRCZN.SORTED",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 119,
+            "column": "J",
+            "cellReference": "J119"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF686D.ERRORS",
+          "type": "File",
+          "relationship": "BOTH",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 131,
+            "column": "J",
+            "cellReference": "J131"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCF690A.OUTBOUND",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 198,
+            "column": "J",
+            "cellReference": "J198"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "PRCP.PRCT283A.ZONE.MNT.TRANS.BACKUP()",
+          "type": "GDG",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 59,
+            "column": "J",
+            "cellReference": "J59"
+          },
+          "visualProperties": {
+            "color": "#LightGreen",
+            "objectType": "collections"
+          }
+        },
+        {
+          "name": "PRCP.ZONE.MRG.MNT.PRCC686D",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 241,
+            "column": "J",
+            "cellReference": "J241"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "SYMBOLIC.CARDIN",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 219,
+            "column": "J",
+            "cellReference": "J219"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "SYMBOLIC.CARDOUT",
+          "type": "File",
+          "relationship": "OUTPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 220,
+            "column": "J",
+            "cellReference": "J220"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        },
+        {
+          "name": "SYMBOLIC.INFILE",
+          "type": "File",
+          "relationship": "INPUT",
+          "excelReference": {
+            "worksheet": "Files",
+            "row": 218,
+            "column": "J",
+            "cellReference": "J218"
+          },
+          "visualProperties": {
+            "color": "#White",
+            "objectType": "file"
+          }
+        }
+      ]
+    }
+  ]
+}
